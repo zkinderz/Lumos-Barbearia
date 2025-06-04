@@ -4,13 +4,19 @@ from datetime import datetime, timedelta
 
 app = Flask(__name__)
 
+<<<<<<< HEAD
 # Banco de dados
+=======
+>>>>>>> 677ae04b7af11208e1c626c5a430817c9701fc4f
 def get_db_connection():
     conn = sqlite3.connect('agenda.db')
     conn.row_factory = sqlite3.Row
     return conn
 
+<<<<<<< HEAD
 # Criação do banco se não existir
+=======
+>>>>>>> 677ae04b7af11208e1c626c5a430817c9701fc4f
 conn = get_db_connection()
 conn.execute('''
 CREATE TABLE IF NOT EXISTS agendamentos (
@@ -25,7 +31,10 @@ CREATE TABLE IF NOT EXISTS agendamentos (
 conn.commit()
 conn.close()
 
+<<<<<<< HEAD
 # Gerar horários de 40 em 40 minutos
+=======
+>>>>>>> 677ae04b7af11208e1c626c5a430817c9701fc4f
 def gerar_horarios():
     horarios = []
     inicio = datetime.strptime("09:00", "%H:%M")
@@ -95,4 +104,8 @@ def confirmar(id):
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
+<<<<<<< HEAD
     app.run(debug=True)
+=======
+    app.run(debug=True)
+>>>>>>> 677ae04b7af11208e1c626c5a430817c9701fc4f

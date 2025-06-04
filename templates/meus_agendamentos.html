@@ -2,10 +2,15 @@
 <html>
 <head>
     <meta charset="UTF-8">
+<<<<<<< HEAD
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meus Agendamentos - Lumos Barbearia</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+=======
+    <title>Meus Agendamentos - Lumos Barbearia</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+>>>>>>> 677ae04b7af11208e1c626c5a430817c9701fc4f
 </head>
 <body>
     <div class="container">
@@ -18,11 +23,19 @@
         {% if agendamentos %}
             <ul>
             {% for a in agendamentos %}
+<<<<<<< HEAD
                 <li>{{a['data']}} às {{a['horario']}} - {% if a['confirmado'] %}Confirmado{% else %}<a href="/confirmar/{{a['id']}}" class="btn-link" style="padding: 5px 10px; font-size: 0.9em; margin: 0;">Confirmar Presença</a>{% endif %}</li>
             {% endfor %}
             </ul>
         {% endif %}
         <a href="/" class="btn-link" style="margin-top: 20px;">Voltar à Página Inicial</a>
+=======
+                <li>{{a['data']}} às {{a['horario']}} - {% if a['confirmado'] %}Confirmado{% else %}<a href="/confirmar/{{a['id']}}">Confirmar Presença</a>{% endif %}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+        <a href="/">Voltar</a>
+>>>>>>> 677ae04b7af11208e1c626c5a430817c9701fc4f
     </div>
 </body>
 </html>
