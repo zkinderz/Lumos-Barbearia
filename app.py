@@ -4,19 +4,11 @@ from datetime import datetime, timedelta
 
 app = Flask(__name__)
 
-<<<<<<< HEAD
-# Banco de dados
-=======
->>>>>>> 677ae04b7af11208e1c626c5a430817c9701fc4f
 def get_db_connection():
     conn = sqlite3.connect('agenda.db')
     conn.row_factory = sqlite3.Row
     return conn
 
-<<<<<<< HEAD
-# Criação do banco se não existir
-=======
->>>>>>> 677ae04b7af11208e1c626c5a430817c9701fc4f
 conn = get_db_connection()
 conn.execute('''
 CREATE TABLE IF NOT EXISTS agendamentos (
@@ -31,10 +23,6 @@ CREATE TABLE IF NOT EXISTS agendamentos (
 conn.commit()
 conn.close()
 
-<<<<<<< HEAD
-# Gerar horários de 40 em 40 minutos
-=======
->>>>>>> 677ae04b7af11208e1c626c5a430817c9701fc4f
 def gerar_horarios():
     horarios = []
     inicio = datetime.strptime("09:00", "%H:%M")
@@ -50,6 +38,8 @@ def index():
 
 @app.route('/agendar', methods=['GET', 'POST'])
 def agendar():
+    horarios_disponiveis = gerar_horarios()
+
     if request.method == 'POST':
         nome = request.form['nome']
         telefone = request.form['telefone']
@@ -61,11 +51,9 @@ def agendar():
                      (nome, telefone, data, horario))
         conn.commit()
         conn.close()
-        return redirect(url_for('index'))
-
+        return redirect(url_for('meus_agendamentos'))
+    
     data = request.args.get('data')
-    horarios_disponiveis = gerar_horarios()
-
     if data:
         conn = get_db_connection()
         ocupados = conn.execute('SELECT horario FROM agendamentos WHERE data = ?', (data,)).fetchall()
@@ -101,11 +89,8 @@ def confirmar(id):
     conn.execute('UPDATE agendamentos SET confirmado = 1 WHERE id = ?', (id,))
     conn.commit()
     conn.close()
-    return redirect(url_for('index'))
+    return redirect(url_for('meus_agendamentos'))
 
-if __name__ == '__main__':
-<<<<<<< HEAD
-    app.run(debug=True)
-=======
-    app.run(debug=True)
->>>>>>> 677ae04b7af11208e1c626c5a430817c9701fc4f
+# O bloco abaixo não deve rodar em produção com o Gunicorn, apenas para desenvolvimento local
+# if __name__ == '__main__':
+#    app.run(debug=True)
