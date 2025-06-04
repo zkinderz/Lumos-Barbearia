@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>LUMOS BARBEARIA - Estilo que Ilumina</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1>LUMOS BARBEARIA</h1>
+            <p>Onde a arte do corte encontra a tradição, iluminando seu estilo.</p>
+            <a href="/agendar" class="btn-link">Agende Seu Horário Agora!</a>
+        </div>
+    </section>
+
+    <section class="section section-dark">
+        <div class="container">
+            <h2>Sobre Nós</h2>
+            <p>
+                A Lumos Barbearia nasceu da paixão por transformar e realçar a beleza masculina. Com anos de experiência e um olhar atento às tendências, nossa equipe de barbeiros está pronta para oferecer um serviço de excelência, do corte clássico ao mais moderno, sempre com a máxima atenção aos detalhes.
+                Aqui, cada visita é uma experiência de relaxamento e renovação.
+            </p>
+        </div>
+    </section>
+
+    <section class="section section-light">
+        <div class="container">
+            <h2>Nossos Serviços</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <i class="fas fa-cut fa-3x" style="color: var(--accent-gold); margin-bottom: 15px;"></i>
+                    <h3>Corte Masculino</h3>
+                    <p>Cortes clássicos, modernos e personalizados. Seu estilo, nossa arte.</p>
+                    <p>A partir de R$ 40,00</p>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-beard fa-3x" style="color: var(--accent-gold); margin-bottom: 15px;"></i>
+                    <h3>Barba Modelada</h3>
+                    <p>O cuidado que sua barba merece, com toalha quente e finalização perfeita.</p>
+                    <p>A partir de R$ 35,00</p>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-child fa-3x" style="color: var(--accent-gold); margin-bottom: 15px;"></i>
+                    <h3>Corte Kids</h3>
+                    <p>Estilo e diversão para os pequenos, com toda a segurança e paciência.</p>
+                    <p>A partir de R$ 30,00</p>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-spa fa-3x" style="color: var(--accent-gold); margin-bottom: 15px;"></i>
+                    <h3>Pacote Relaxamento</h3>
+                    <p>Corte, barba e uma massagem capilar para um momento de puro bem-estar.</p>
+                    <p>A partir de R$ 70,00</p>
+                </div>
+            </div>
+            <p style="margin-top: 30px;"><a href="/agendar" class="btn-link">Ver Todos os Serviços e Agendar</a></p>
+        </div>
+    </section>
+
+    <section class="section section-dark">
+        <div class="container" style="text-align: center;">
+            <h2>Gerencie Seus Agendamentos</h2>
+            <a href="/agendar" class="btn-link">Agendar Novo Horário</a>
+            <a href="/meus_agendamentos" class="btn-link">Consultar Meus Agendamentos</a>
+            <a href="/admin" class="btn-link">Área do Administrador</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Lumos Barbearia. Todos os direitos reservados.</p>
+            <p>Endereço: Rua da Barbearia, 123 - Centro, Jundiaí - SP</p>
+            <p>Telefone: (11) 98765-4321 | Email: contato@lumosbarbearia.com.br</p>
+            <div class="social-links">
+                <a href="#" target="_blank" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
