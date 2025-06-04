@@ -1,95 +1,29 @@
-from flask import Flask, render_template, request, redirect, url_for
-import sqlite3
-from datetime import datetime, timedelta
-
-app = Flask(__name__)
-
-def get_db_connection():
-    conn = sqlite3.connect('agenda.db')
-    conn.row_factory = sqlite3.Row
-    return conn
-
-conn = get_db_connection()
-conn.execute('''
-CREATE TABLE IF NOT EXISTS agendamentos (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    nome TEXT,
-    telefone TEXT,
-    data TEXT,
-    horario TEXT,
-    confirmado INTEGER DEFAULT 0
-)
-''')
-conn.commit()
-conn.close()
-
-def gerar_horarios():
-    horarios = []
-    inicio = datetime.strptime("09:00", "%H:%M")
-    fim = datetime.strptime("18:00", "%H:%M")
-    while inicio <= fim:
-        horarios.append(inicio.strftime("%H:%M"))
-        inicio += timedelta(minutes=40)
-    return horarios
-
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/agendar', methods=['GET', 'POST'])
-def agendar():
-    if request.method == 'POST':
-        nome = request.form['nome']
-        telefone = request.form['telefone']
-        data = request.form['data']
-        horario = request.form['horario']
-
-        conn = get_db_connection()
-        conn.execute('INSERT INTO agendamentos (nome, telefone, data, horario) VALUES (?, ?, ?, ?)',
-                     (nome, telefone, data, horario))
-        conn.commit()
-        conn.close()
-        return redirect(url_for('index'))
-
-    data = request.args.get('data')
-    horarios_disponiveis = gerar_horarios()
-
-    if data:
-        conn = get_db_connection()
-        ocupados = conn.execute('SELECT horario FROM agendamentos WHERE data = ?', (data,)).fetchall()
-        conn.close()
-        ocupados = [o['horario'] for o in ocupados]
-        horarios_disponiveis = [h for h in horarios_disponiveis if h not in ocupados]
-
-    return render_template('agendar.html', horarios=horarios_disponiveis)
-
-@app.route('/admin')
-def admin():
-    data = request.args.get('data')
-    agendamentos = []
-    if data:
-        conn = get_db_connection()
-        agendamentos = conn.execute('SELECT * FROM agendamentos WHERE data = ? ORDER BY horario', (data,)).fetchall()
-        conn.close()
-    return render_template('admin.html', agendamentos=agendamentos)
-
-@app.route('/meus_agendamentos', methods=['GET', 'POST'])
-def meus_agendamentos():
-    if request.method == 'POST':
-        telefone = request.form['telefone']
-        conn = get_db_connection()
-        agendamentos = conn.execute('SELECT * FROM agendamentos WHERE telefone = ?', (telefone,)).fetchall()
-        conn.close()
-        return render_template('meus_agendamentos.html', agendamentos=agendamentos, telefone=telefone)
-    return render_template('meus_agendamentos.html')
-
-@app.route('/confirmar/<int:id>')
-def confirmar(id):
-    conn = get_db_connection()
-    conn.execute('UPDATE agendamentos SET confirmado = 1 WHERE id = ?', (id,))
-    conn.commit()
-    conn.close()
-    return redirect(url_for('index'))
-
-if __name__ == '__main__':
-    app.run(debug=True)
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Lumos Barbearia</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Área do Administrador</h2>
+        <form method="get">
+            <label>Data (DD/MM/AAAA):</label>
+            <input type="text" name="data" required>
+            <input type="submit" value="Ver Agendamentos">
+        </form>
+        {% if agendamentos %}
+            <h3>Agendamentos:</h3>
+            <ul>
+            {% for a in agendamentos %}
+                <li>{{a['horario']}} - {{a['nome']}} ({{a['telefone']}}) - {% if a['confirmado'] %}Confirmado{% else %}Pendente{% endif %}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+        <a href="/" class="btn-link" style="margin-top: 20px;">Voltar à Página Inicial</a>
+    </div>
+</body>
+</html>

@@ -2,8 +2,10 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Lumos Barbearia</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <div class="container">
@@ -21,7 +23,7 @@
             {% endfor %}
             </ul>
         {% endif %}
-        <a href="/">Voltar</a>
+        <a href="/" class="btn-link" style="margin-top: 20px;">Voltar à Página Inicial</a>
     </div>
 </body>
 </html>
