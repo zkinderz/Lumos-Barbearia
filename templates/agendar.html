@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Agendar - Lumos Barbearia</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Agendar Horário</h2>
+        <form method="get">
+            <label>Escolha a data (DD/MM/AAAA):</label>
+            <input type="text" name="data" required>
+            <input type="submit" value="Ver horários">
+        </form>
+        {% if horarios %}
+            <form method="post">
+                <label>Nome:</label>
+                <input type="text" name="nome" required>
+                <label>Telefone:</label>
+                <input type="text" name="telefone" required>
+                <label>Horário:</label>
+                <select name="horario" required>
+                    {% for h in horarios %}
+                        <option value="{{h}}">{{h}}</option>
+                    {% endfor %}
+                </select>
+                <input type="hidden" name="data" value="{{request.args.get('data')}}">
+                <input type="submit" value="Confirmar Agendamento">
+            </form>
+        {% endif %}
+        <a href="/">Voltar</a>
+    </div>
+</body>
+</html>

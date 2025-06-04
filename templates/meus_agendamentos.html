@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Meus Agendamentos - Lumos Barbearia</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Meus Agendamentos</h2>
+        <form method="post">
+            <label>Telefone:</label>
+            <input type="text" name="telefone" required>
+            <input type="submit" value="Buscar">
+        </form>
+        {% if agendamentos %}
+            <ul>
+            {% for a in agendamentos %}
+                <li>{{a['data']}} às {{a['horario']}} - {% if a['confirmado'] %}Confirmado{% else %}<a href="/confirmar/{{a['id']}}">Confirmar Presença</a>{% endif %}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+        <a href="/">Voltar</a>
+    </div>
+</body>
+</html>
