@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Lumos Barbearia</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Área do Administrador</h2>
+        <form method="get">
+            <label>Data (DD/MM/AAAA):</label>
+            <input type="text" name="data" required>
+            <input type="submit" value="Ver Agendamentos">
+        </form>
+        {% if agendamentos %}
+            <h3>Agendamentos:</h3>
+            <ul>
+            {% for a in agendamentos %}
+                <li>{{a['horario']}} - {{a['nome']}} ({{a['telefone']}}) - {% if a['confirmado'] %}Confirmado{% else %}Pendente{% endif %}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+        <a href="/">Voltar</a>
+    </div>
+</body>
+</html>
