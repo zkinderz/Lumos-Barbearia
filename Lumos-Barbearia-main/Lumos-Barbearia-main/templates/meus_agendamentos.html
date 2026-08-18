@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meus Agendamentos - Lumos Barbearia</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .search-box { display: flex; gap: 10px; margin-bottom: 25px; }
+        .search-box input[type="text"] { flex: 1; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; }
+        .search-box button { padding: 12px 20px; background-color: #333; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .search-box button:hover { background-color: #555; }
+        
+        .cards-container { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
+        .card-agendamento { background: #fff; border: 1px solid #e0e0e0; border-left: 5px solid #ffc107; padding: 18px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
+        .card-agendamento.confirmado { border-left-color: #28a745; }
+        
+        .info-data { font-size: 1.1em; font-weight: bold; color: #333; }
+        .info-detalhes { color: #666; font-size: 0.95em; margin-top: 5px; }
+        
+        .badge-status { padding: 6px 12px; border-radius: 20px; font-size: 0.85em; font-weight: bold; display: inline-block; }
+        .status-confirmado { background-color: #d4edda; color: #155724; }
+        .btn-confirmar { background-color: #28a745; color: white; text-decoration: none; padding: 8px 14px; border-radius: 5px; font-weight: bold; font-size: 0.9em; transition: 0.2s; }
+        .btn-confirmar:hover { background-color: #218838; }
+        
+        .sem-resultados { text-align: center; color: #777; padding: 30px; background: #f9f9f9; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2><i class="fas fa-calendar-alt"></i> Meus Agendamentos</h2>
+        
+        <form method="post" class="search-box">
+            <input type="text" name="telefone" placeholder="Digite seu telefone com DDD" value="{{ telefone if telefone else '' }}" required>
+            <button type="submit"><i class="fas fa-search"></i> Buscar</button>
+        </form>
+
+        {% if agendamentos %}
+            <div class="cards-container">
+            {% for a in agendamentos %}
+                <div class="card-agendamento {% if a['confirmado'] %}confirmado{% endif %}">
+                    <div>
+                        <div class="info-data">
+                            <i class="far fa-calendar-check"></i> {{ a['data'] }} às {{ a['horario'] }}h
+                        </div>
+                        <div class="info-detalhes">
+                            <i class="fas fa-user"></i> Cliente: {{ a['nome'] }}
+                        </div>
+                    </div>
+                    
+                    <div>
+                        {% if a['confirmado'] %}
+                            <span class="badge-status status-confirmado"><i class="fas fa-check"></i> Confirmado</span>
+                        {% else %}
+                            <a href="/confirmar/{{ a['id'] }}" class="btn-confirmar"><i class="fas fa-check-circle"></i> Confirmar Presença</a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
+        {% elif telefone %}
+            <div class="sem-resultados">
+                <i class="fas fa-search-minus fa-2x" style="margin-bottom: 10px;"></i>
+                <p>Nenhum agendamento encontrado para o telefone <strong>{{ telefone }}</strong>.</p>
+            </div>
+        {% endif %}
+
+        <br>
+        <a href="/" class="btn-link" style="display: block; text-align: center; margin-top: 20px;">
+            <i class="fas fa-arrow-left"></i> Voltar à Página Inicial
+        </a>
+    </div>
+</body>
+</html>
