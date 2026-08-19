@@ -3,25 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Admin - Lumos Barbearia</title>
+    <title>Login - Lumos Barbearia</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #f4f4f4; margin: 0; }
-        .login-card { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); width: 320px; text-align: center; }
-        .login-card h2 { margin-top: 0; color: #333; margin-bottom: 20px; }
+        body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #121212; color: #fff; margin: 0; }
+        .login-card { background: #1e1e1e; padding: 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); width: 320px; text-align: center; }
+        .login-card h2 { margin-top: 0; color: #fff; margin-bottom: 20px; }
         .form-group { margin-bottom: 15px; text-align: left; }
-        .form-group label { display: block; margin-bottom: 5px; color: #555; }
-        input[type="password"] { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
-        .btn-entrar { width: 100%; padding: 10px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 16px; margin-top: 10px; }
+        .form-group label { display: block; margin-bottom: 5px; color: #ccc; font-size: 14px; }
+        input[type="text"], input[type="password"] { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #333; background-color: #2b2b2b; color: #fff; border-radius: 4px; font-size: 14px; }
+        input[type="text"]:focus, input[type="password"]:focus { border-color: #28a745; outline: none; }
+        .btn-entrar { width: 100%; padding: 10px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 16px; margin-top: 10px; transition: background 0.2s; }
         .btn-entrar:hover { background-color: #218838; }
-        .erro { color: #dc3545; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 8px; border-radius: 4px; margin-bottom: 15px; font-size: 14px; }
-        .voltar-link { display: inline-block; margin-top: 15px; color: #007bff; text-decoration: none; font-size: 14px; }
+        .erro { color: #ff6b6b; background-color: #3d1a1a; border: 1px solid #8b0000; padding: 8px; border-radius: 4px; margin-bottom: 15px; font-size: 14px; }
+        .cadastro-link { display: inline-block; margin-top: 15px; color: #28a745; text-decoration: none; font-size: 14px; }
+        .cadastro-link:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
     <div class="login-card">
-        <h2><i class="fas fa-lock"></i> Login do Barbeiro</h2>
+        <h2><i class="fas fa-cut"></i> Lumos Barbearia</h2>
         
         {% with messages = get_flashed_messages() %}
             {% if messages %}
@@ -31,13 +33,17 @@
 
         <form action="{{ url_for('login') }}" method="POST">
             <div class="form-group">
-                <label for="senha">Senha de Acesso:</label>
-                <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required autofocus>
+                <label for="email"><i class="fas fa-user"></i> E-mail ou Usuário:</label>
+                <input type="text" id="email" name="email" placeholder="Digite seu e-mail ou 'admin'" required autofocus>
+            </div>
+            <div class="form-group">
+                <label for="senha"><i class="fas fa-lock"></i> Senha:</label>
+                <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
             </div>
             <button type="submit" class="btn-entrar">Entrar</button>
         </form>
 
-        <a href="/" class="voltar-link">Voltar ao site</a>
+        <a href="{{ url_for('cadastro') }}" class="cadastro-link">Não tem uma conta? Cadastre-se</a>
     </div>
 </body>
 </html>

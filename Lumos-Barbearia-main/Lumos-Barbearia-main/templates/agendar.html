@@ -3,151 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agendar - Lumos Barbearia</title>
+    <title>Agendar Horário - Lumos Barbearia</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body { background-color: #121212; color: #ffffff; }
-
-        .step-card { 
-            background: #222222; 
-            padding: 20px; 
-            border-radius: 8px; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3); 
-            margin-bottom: 20px; 
-            border: 1px solid #c5a059; 
-        }
-
-        .step-title { 
-            font-size: 1.1em; 
-            font-weight: bold; 
-            color: #c5a059; 
-            margin-bottom: 15px; 
-            display: flex; 
-            align-items: center; 
-            gap: 8px; 
-        }
-
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 6px; font-weight: 500; color: #ffffff; }
-        
-        .form-group input { 
-            width: 100%; 
-            padding: 10px; 
-            border: 1px solid #444; 
-            border-radius: 6px; 
-            box-sizing: border-box; 
-            font-size: 15px; 
-            background-color: #2b2b2b; 
-            color: #ffffff; 
-        }
-
-        .form-group input::placeholder { color: #aaa; }
-
-        .horarios-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px; margin-top: 10px; }
-        .radio-horario { display: none; }
-
-        .label-horario { 
-            display: block; 
-            text-align: center; 
-            padding: 10px; 
-            background: #2b2b2b; 
-            color: #ffffff; 
-            border: 1px solid #444; 
-            border-radius: 6px; 
-            cursor: pointer; 
-            font-weight: bold; 
-            transition: 0.2s; 
-        }
-
-        .radio-horario:checked + .label-horario { 
-            background-color: #c5a059; 
-            color: #121212; 
-            border-color: #c5a059; 
-        }
-
-        .label-horario:hover { border-color: #c5a059; }
-
-        .btn-confirmar { 
-            width: 100%; 
-            padding: 12px; 
-            background-color: #28a745; 
-            color: white; 
-            border: none; 
-            border-radius: 6px; 
-            font-size: 16px; 
-            font-weight: bold; 
-            cursor: pointer; 
-            margin-top: 10px; 
-            transition: 0.2s; 
-        }
-        .btn-confirmar:hover { background-color: #218838; }
-
-        .btn-buscar { 
-            padding: 10px 15px; 
-            background-color: #c5a059; 
-            color: #121212; 
-            border: none; 
-            border-radius: 6px; 
-            cursor: pointer; 
-            font-weight: bold; 
-        }
-        .btn-buscar:hover { background-color: #d4af37; }
+        body { font-family: Arial, sans-serif; background-color: #121212; color: #fff; margin: 0; padding: 0; }
+        header { background-color: #1e1e1e; padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; }
+        header h1 { margin: 0; font-size: 24px; color: #d4af37; }
+        nav a { color: #fff; text-decoration: none; margin-left: 15px; font-weight: bold; }
+        nav a:hover { color: #d4af37; }
+        .container { max-width: 600px; margin: 40px auto; background: #1e1e1e; padding: 30px; border-radius: 8px; border: 1px solid #333; }
+        h2 { color: #d4af37; margin-top: 0; text-align: center; }
+        .user-info { background: #2b2b2b; padding: 12px; border-radius: 5px; margin-bottom: 20px; border-left: 4px solid #d4af37; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; color: #ccc; }
+        input[type="date"], select { width: 100%; padding: 12px; background: #2b2b2b; border: 1px solid #444; color: #fff; border-radius: 5px; box-sizing: border-box; }
+        .btn-confirmar { width: 100%; padding: 12px; background-color: #d4af37; color: #121212; border: none; border-radius: 5px; font-weight: bold; font-size: 16px; cursor: pointer; transition: background 0.2s; }
+        .btn-confirmar:hover { background-color: #c59b27; }
+        .flashes { list-style: none; padding: 10px; background-color: #d4af37; color: #121212; font-weight: bold; text-align: center; border-radius: 5px; margin-bottom: 20px; }
     </style>
 </head>
 <body>
+
+    <header>
+        <h1><i class="fas fa-cut"></i> Lumos Barbearia</h1>
+        <nav>
+            <a href="{{ url_for('index') }}"><i class="fas fa-home"></i> Início</a>
+            {% if session.get('usuario_id') %}
+                <a href="{{ url_for('meus_agendamentos') }}"><i class="fas fa-clock"></i> Meus Agendamentos</a>
+                <a href="{{ url_for('logout') }}" style="color: #ff6b6b;"><i class="fas fa-sign-out-alt"></i> Sair</a>
+            {% else %}
+                <a href="{{ url_for('login') }}"><i class="fas fa-sign-in-alt"></i> Entrar</a>
+            {% endif %}
+        </nav>
+    </header>
+
     <div class="container">
-        <h2><i class="fas fa-calendar-plus"></i> Agendar Horário</h2>
-        
-        <div class="step-card">
-            <div class="step-title"><i class="fas fa-calendar-day"></i> 1. Escolha a data</div>
-            <form method="get" style="display: flex; gap: 10px; align-items: center;">
-                <input type="date" name="data" min="{{ data_hoje }}" value="{{ request.args.get('data', '') }}" required style="flex: 1; padding: 9px; border: 1px solid #444; border-radius: 6px; background: #2b2b2b; color: #ffffff;">
-                <button type="submit" class="btn-buscar"><i class="fas fa-search"></i> Ver Horários</button>
-            </form>
-        </div>
+        <h2><i class="fas fa-calendar-alt"></i> Novo Agendamento</h2>
 
-        {% if horarios %}
-            <div class="step-card">
-                <div class="step-title"><i class="fas fa-clock"></i> 2. Selecione o horário e informe seus dados</div>
-                
-                <form method="post">
-                    <div class="form-group">
-                        <label><i class="fas fa-user"></i> Seu Nome:</label>
-                        <input type="text" name="nome" placeholder="Digite seu nome completo" required>
-                    </div>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="flashes">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
 
-                    <div class="form-group">
-                        <label><i class="fas fa-phone"></i> Seu Telefone (WhatsApp):</label>
-                        <input type="text" name="telefone" placeholder="(DDD) 99999-9999" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Horários disponíveis para {{ request.args.get('data') }}:</label>
-                        <div class="horarios-grid">
-                            {% for h in horarios %}
-                                <div>
-                                    <input type="radio" id="h_{{ loop.index }}" name="horario" value="{{ h }}" class="radio-horario" required>
-                                    <label for="h_{{ loop.index }}" class="label-horario">{{ h }}</label>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-
-                    <input type="hidden" name="data" value="{{ request.args.get('data') }}">
-                    <button type="submit" class="btn-confirmar"><i class="fab fa-whatsapp"></i> Confirmar Agendamento</button>
-                </form>
-            </div>
-        {% elif request.args.get('data') %}
-            <div class="step-card" style="text-align: center; color: #aaa;">
-                <i class="fas fa-calendar-times fa-2x" style="margin-bottom: 10px; color: #dc3545;"></i>
-                <p>Não há horários disponíveis para a data selecionada. Tente outro dia!</p>
+        <!-- Mostra quem está agendando APENAS se estiver logado -->
+        {% if session.get('usuario_nome') %}
+            <div class="user-info">
+                <i class="fas fa-user-check"></i> Agendando como: <strong>{{ session['usuario_nome'] }}</strong>
             </div>
         {% endif %}
 
-        <a href="/" class="btn-link" style="display: block; text-align: center; margin-top: 15px; color: #c5a059;">
-            <i class="fas fa-arrow-left"></i> Voltar à Página Inicial
-        </a>
+        <!-- Passos do Agendamento -->
+        <form method="GET" action="{{ url_for('agendar') }}" class="form-group">
+            <label for="data_busca"><i class="fas fa-calendar-day"></i> 1. Escolha a Data:</label>
+            <input type="date" id="data_busca" name="data" min="{{ data_hoje }}" value="{{ data_selecionada or '' }}" onchange="this.form.submit()">
+        </form>
+
+        {% if data_selecionada %}
+            <form method="POST" action="{{ url_for('agendar') }}">
+                <input type="hidden" name="data" value="{{ data_selecionada }}">
+                
+                <div class="form-group">
+                    <label for="servico"><i class="fas fa-concierge-bell"></i> 2. Escolha o Serviço:</label>
+                    <select name="servico" id="servico" required>
+                        <option value="Corte Moderno">Corte Moderno</option>
+                        <option value="Barba Completa">Barba Completa</option>
+                        <option value="Combo Completo (Corte + Barba)">Combo Completo (Corte + Barba)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="horario"><i class="fas fa-clock"></i> 3. Escolha o Horário:</label>
+                    {% if horarios %}
+                        <select name="horario" id="horario" required>
+                            <option value="" disabled selected>Selecione um horário</option>
+                            {% for h in horarios %}
+                                <option value="{{ h }}">{{ h }}</option>
+                            {% endfor %}
+                        </select>
+                    {% else %}
+                        <p style="color: #ff6b6b;">Não há horários disponíveis para esta data.</p>
+                    {% endif %}
+                </div>
+
+                {% if horarios %}
+                    <button type="submit" class="btn-confirmar">
+                        <i class="fas fa-check"></i> 
+                        {% if session.get('usuario_id') %}
+                            Confirmar Agendamento
+                        {% else %}
+                            Ir para Login / Cadastro para Concluir
+                        {% endif %}
+                    </button>
+                {% endif %}
+            </form>
+        {% endif %}
     </div>
+
 </body>
 </html>
