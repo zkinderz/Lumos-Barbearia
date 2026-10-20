@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - Lumos Barbearia</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Criar Conta</h2>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="flashes">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('cadastro') }}" method="POST">
+            <label for="nome">Nome Completo:</label>
+            <input type="text" id="nome" name="nome" required>
+
+            <label for="telefone">Celular / WhatsApp:</label>
+            <input type="tel" id="telefone" name="telefone" required placeholder="(11) 99999-9999">
+
+            <label for="email">E-mail:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="senha">Senha:</label>
+            <input type="password" id="senha" name="senha" required>
+
+            <div style="margin: 15px 0;">
+                <input type="checkbox" id="lgpd" name="lgpd" required>
+                <label for="lgpd" style="display: inline; font-size: 0.9em;">
+                    Concordo com a coleta de meus dados pessoais para fins de agendamento, conforme a LGPD.
+                </label>
+            </div>
+
+            <button type="submit">Cadastrar</button>
+        </form>
+
+        <p style="margin-top: 15px; text-align: center;">
+            Já tem uma conta? <a href="{{ url_for('login') }}">Faça login</a>
+        </p>
+    </div>
+</body>
+</html>
