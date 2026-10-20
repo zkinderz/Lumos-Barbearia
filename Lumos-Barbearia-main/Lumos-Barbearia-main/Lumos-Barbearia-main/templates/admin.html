@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Barbeiro - Lumos Barbearia</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #121212; color: #fff; margin: 0; padding: 0; }
+        header { background-color: #1e1e1e; padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; }
+        header h1 { margin: 0; font-size: 24px; color: #d4af37; }
+        .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #1e1e1e; border-radius: 8px; overflow: hidden; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #333; }
+        th { background-color: #2b2b2b; color: #d4af37; }
+        .badge-servico { background-color: #333; color: #d4af37; padding: 4px 8px; border-radius: 4px; border: 1px solid #d4af37; font-size: 13px; }
+        .btn-confirmar { color: #28a745; text-decoration: none; margin-right: 10px; font-weight: bold; }
+        .btn-cancelar { color: #ff6b6b; text-decoration: none; font-weight: bold; }
+        .status-confirmado { color: #28a745; font-weight: bold; }
+        .status-pendente { color: #ffc107; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1><i class="fas fa-user-shield"></i> Painel do Barbeiro</h1>
+        <a href="{{ url_for('logout') }}" style="color: #ff6b6b; text-decoration: none; font-weight: bold;"><i class="fas fa-sign-out-alt"></i> Sair</a>
+    </header>
+
+    <div class="container">
+        <h2>Agendamentos Recebidos</h2>
+
+        <form method="GET" action="{{ url_for('admin') }}" style="margin-bottom: 20px;">
+            <label for="data">Filtrar por Data: </label>
+            <input type="date" id="data" name="data" onchange="this.form.submit()" style="padding: 8px; background: #2b2b2b; color: #fff; border: 1px solid #444; border-radius: 4px;">
+            <a href="{{ url_for('admin') }}" style="color: #d4af37; margin-left: 10px; text-decoration: none;">Ver Todos</a>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Telefone</th>
+                    <th>Serviço</th>
+                    <th>Data</th>
+                    <th>Horário</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for a in agendamentos %}
+                <tr>
+                    <td>{{ a.nome }}</td>
+                    <td>{{ a.telefone or 'Não informado' }}</td>
+                    <td><span class="badge-servico">{{ a.servico or 'Corte Moderno' }}</span></td>
+                    <td>{{ a.data }}</td>
+                    <td>{{ a.horario }}</td>
+                    <td>
+                        {% if a.confirmado %}
+                            <span class="status-confirmado"><i class="fas fa-check-circle"></i> Confirmado</span>
+                        {% else %}
+                            <span class="status-pendente"><i class="fas fa-clock"></i> Pendente</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if not a.confirmado %}
+                            <a href="{{ url_for('confirmar', id=a.id) }}" class="btn-confirmar">Confirmar</a>
+                        {% endif %}
+                        <a href="{{ url_for('cancelar', id=a.id) }}" class="btn-cancelar" onclick="return confirm('Cancelar agendamento?')">Cancelar</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7" style="text-align: center; color: #888;">Nenhum agendamento encontrado.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>

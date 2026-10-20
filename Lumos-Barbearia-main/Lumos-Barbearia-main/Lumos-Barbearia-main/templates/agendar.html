@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendar Horário - Lumos Barbearia</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #121212; color: #fff; margin: 0; padding: 0; }
+        header { background-color: #1e1e1e; padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; }
+        header h1 { margin: 0; font-size: 24px; color: #d4af37; }
+        nav a { color: #fff; text-decoration: none; margin-left: 15px; font-weight: bold; }
+        nav a:hover { color: #d4af37; }
+        .container { max-width: 600px; margin: 40px auto; background: #1e1e1e; padding: 30px; border-radius: 8px; border: 1px solid #333; }
+        h2 { color: #d4af37; margin-top: 0; text-align: center; }
+        .user-info { background: #2b2b2b; padding: 12px; border-radius: 5px; margin-bottom: 20px; border-left: 4px solid #d4af37; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; color: #ccc; }
+        input[type="date"], select { width: 100%; padding: 12px; background: #2b2b2b; border: 1px solid #444; color: #fff; border-radius: 5px; box-sizing: border-box; }
+        .btn-confirmar { width: 100%; padding: 12px; background-color: #d4af37; color: #121212; border: none; border-radius: 5px; font-weight: bold; font-size: 16px; cursor: pointer; transition: background 0.2s; }
+        .btn-confirmar:hover { background-color: #c59b27; }
+        .flashes { list-style: none; padding: 10px; background-color: #d4af37; color: #121212; font-weight: bold; text-align: center; border-radius: 5px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1><i class="fas fa-cut"></i> Lumos Barbearia</h1>
+        <nav>
+            <a href="{{ url_for('index') }}"><i class="fas fa-home"></i> Início</a>
+            {% if session.get('usuario_id') %}
+                <a href="{{ url_for('meus_agendamentos') }}"><i class="fas fa-clock"></i> Meus Agendamentos</a>
+                <a href="{{ url_for('logout') }}" style="color: #ff6b6b;"><i class="fas fa-sign-out-alt"></i> Sair</a>
+            {% else %}
+                <a href="{{ url_for('login') }}"><i class="fas fa-sign-in-alt"></i> Entrar</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <div class="container">
+        <h2><i class="fas fa-calendar-alt"></i> Novo Agendamento</h2>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="flashes">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Mostra quem está agendando APENAS se estiver logado -->
+        {% if session.get('usuario_nome') %}
+            <div class="user-info">
+                <i class="fas fa-user-check"></i> Agendando como: <strong>{{ session['usuario_nome'] }}</strong>
+            </div>
+        {% endif %}
+
+        <!-- Passos do Agendamento -->
+        <form method="GET" action="{{ url_for('agendar') }}" class="form-group">
+            <label for="data_busca"><i class="fas fa-calendar-day"></i> 1. Escolha a Data:</label>
+            <input type="date" id="data_busca" name="data" min="{{ data_hoje }}" value="{{ data_selecionada or '' }}" onchange="this.form.submit()">
+        </form>
+
+        {% if data_selecionada %}
+            <form method="POST" action="{{ url_for('agendar') }}">
+                <input type="hidden" name="data" value="{{ data_selecionada }}">
+                
+                <div class="form-group">
+                    <label for="servico"><i class="fas fa-concierge-bell"></i> 2. Escolha o Serviço:</label>
+                    <select name="servico" id="servico" required>
+                        <option value="Corte Moderno">Corte Moderno</option>
+                        <option value="Barba Completa">Barba Completa</option>
+                        <option value="Combo Completo (Corte + Barba)">Combo Completo (Corte + Barba)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="horario"><i class="fas fa-clock"></i> 3. Escolha o Horário:</label>
+                    {% if horarios %}
+                        <select name="horario" id="horario" required>
+                            <option value="" disabled selected>Selecione um horário</option>
+                            {% for h in horarios %}
+                                <option value="{{ h }}">{{ h }}</option>
+                            {% endfor %}
+                        </select>
+                    {% else %}
+                        <p style="color: #ff6b6b;">Não há horários disponíveis para esta data.</p>
+                    {% endif %}
+                </div>
+
+                {% if horarios %}
+                    <button type="submit" class="btn-confirmar">
+                        <i class="fas fa-check"></i> 
+                        {% if session.get('usuario_id') %}
+                            Confirmar Agendamento
+                        {% else %}
+                            Ir para Login / Cadastro para Concluir
+                        {% endif %}
+                    </button>
+                {% endif %}
+            </form>
+        {% endif %}
+    </div>
+
+</body>
+</html>
