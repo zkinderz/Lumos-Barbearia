@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block titulo %}{{ BIZ.nome }}{% endblock %}</title>
+    <meta name="csrf-token" content="{{ token_csrf() }}">
+    <meta name="description" content="{{ BIZ.nome }} - agende seu horario online. {{ BIZ.funcionamento }}.">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+<header class="topo">
+    <a class="marca" href="{{ url_for('index') }}"><i class="fas fa-cut"></i> {{ BIZ.nome }}</a>
+    <nav class="menu">
+        <a href="{{ url_for('agendar') }}"><i class="fas fa-calendar-alt"></i> Agendar</a>
+        {% if session.get('usuario_id') %}
+            <a href="{{ url_for('meus_agendamentos') }}"><i class="fas fa-clock"></i> Meus agendamentos</a>
+            <a href="{{ url_for('conta') }}"><i class="fas fa-user"></i> {{ session['nome'].split(' ')[0] }}</a>
+            {% if session.get('is_admin') %}
+                <a href="{{ url_for('admin') }}"><i class="fas fa-user-shield"></i> Painel</a>
+            {% endif %}
+            <form method="post" action="{{ url_for('logout') }}" class="menu-sair">
+                <input type="hidden" name="csrf_token" value="{{ token_csrf() }}">
+                <button type="submit"><i class="fas fa-sign-out-alt"></i> Sair</button>
+            </form>
+        {% else %}
+            <a href="{{ url_for('login') }}"><i class="fas fa-sign-in-alt"></i> Entrar</a>
+            <a href="{{ url_for('cadastro') }}" class="menu-cta">Criar conta</a>
+        {% endif %}
+    </nav>
+</header>
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul class="avisos">
+            {% for m in messages %}<li>{{ m }}</li>{% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+<main>
+{% block corpo %}{% endblock %}
+</main>
+
+<footer class="rodape">
+    <div class="rodape-conteudo">
+        <div>
+            <h4><i class="fas fa-map-marker-alt"></i> Localização e contato</h4>
+            {% if BIZ.endereco %}<p>{{ BIZ.endereco }}</p>{% endif %}
+            <p>{{ BIZ.funcionamento }}</p>
+            {% if BIZ.email %}<p><a href="mailto:{{ BIZ.email }}">{{ BIZ.email }}</a></p>{% endif %}
+        </div>
+        <div>
+            <h4>Fale com a gente</h4>
+            <p class="social">
+                {% if BIZ.instagram %}<a href="{{ BIZ.instagram }}" target="_blank" rel="noopener" title="Instagram"><i class="fab fa-instagram"></i> Instagram</a>{% endif %}
+                {% if BIZ.whatsapp %}<a href="https://wa.me/{{ BIZ.whatsapp }}" target="_blank" rel="noopener" title="WhatsApp"><i class="fab fa-whatsapp"></i> WhatsApp</a>{% endif %}
+            </p>
+            <p class="miudo"><a href="{{ url_for('privacidade') }}">Política de privacidade e dados (LGPD)</a></p>
+        </div>
+    </div>
+    <p class="direitos">{{ BIZ.nome }} &copy; {{ hoje_iso[:4] }}</p>
+</footer>
+</body>
+</html>

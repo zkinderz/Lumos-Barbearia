@@ -1,0 +1,31 @@
+# segredos e dados locais - nunca versionar
+.env
+data/
+*.db
+*.db-shm
+*.db-wal
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Sistema
+.DS_Store
+
+# Node/Electron
+node_modules/
+dist/
+dist-electron/
+dist-test/
+release/
+out/
+
+# IDE
+.vscode/
+
+# Logs
+*.log
+npm-debug.log*
