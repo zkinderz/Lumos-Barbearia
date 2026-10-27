@@ -1,0 +1,12 @@
+# segredos e dados locais - nunca versionar
+.env
+data/
+*.db
+*.db-shm
+*.db-wal
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.DS_Store

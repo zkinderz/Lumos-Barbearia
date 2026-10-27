@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block titulo %}Privacidade e dados - {{ BIZ.nome }}{% endblock %}
+{% block corpo %}
+<div class="container container-leitura">
+    <h2>Política de privacidade e tratamento de dados</h2>
+    <p class="miudo centro">Última atualização: versão {{ VERSAO_LGPD }}.</p>
+
+    <h3>1. Quem cuida dos seus dados (controlador)</h3>
+    {% if BIZ.responsavel %}<p><strong>{{ BIZ.responsavel }}</strong>{% if BIZ.endereco %}, {{ BIZ.endereco }}{% endif %}.</p>{% endif %}
+    <p>{% if BIZ.email %}E-mail: <a href="mailto:{{ BIZ.email }}">{{ BIZ.email }}</a> {% endif %}
+       {% if BIZ.whatsapp %}&middot; WhatsApp: {{ BIZ.whatsapp }}{% endif %}</p>
+
+    <h3>2. Quais dados coletamos e por que</h3>
+    <table>
+        <thead><tr><th>Dado</th><th>Finalidade</th><th>Base legal</th></tr></thead>
+        <tbody>
+            <tr><td>Nome</td><td>Identificar o cliente na agenda da barbearia.</td><td>Consentimento (art. 7, I)</td></tr>
+            <tr><td>Telefone / WhatsApp</td><td>Confirmar horários e avisar sobre alterações do agendamento.</td><td>Consentimento (art. 7, I)</td></tr>
+            <tr><td>E-mail e senha</td><td>Criar sua conta de acesso ao agendamento online.</td><td>Consentimento (art. 7, I)</td></tr>
+            <tr><td>Data, horário e serviço escolhidos</td><td>Reservar o horário na agenda da loja.</td><td>Execucao de contrato (art. 7, V)</td></tr>
+        </tbody>
+    </table>
+    <p class="miudo">Não coletamos dados sensíveis, nao usamos cookies de rastreamento e nao vendemos nem compartilhamos Dados Pessoais com terceiros para publicidade.</p>
+
+    <h3>3. Como sua senha é guardada</h3>
+    <p>Guardamos apenas um resumo criptografado (hash pbkdf2-sha256) da sua senha, nunca a senha em texto puro. Nem o barbeiro consegue ler sua senha.</p>
+
+    <h3>4. Por quanto tempo guardamos</h3>
+    <p>Contas ativas e agendamentos ficam guardados enquanto a conta existir. Ao excluir a conta, apagam-se imediatamente o registro de acesso e os agendamentos futuros.</p>
+
+    <h3>5. Seus direitos (art. 18 da LGPD)</h3>
+    <ul>
+        <li><strong>Confirmar e acessar</strong> e <strong>portar</strong> seus dados: faca login e use o botao "Exportar meus dados" na pagina <a href="{{ url_for('conta') }}">Minha conta</a>.</li>
+        <li><strong>Corrigir</strong> nome ou telefone: peça pelo WhatsApp {{ BIZ.whatsapp }}.</li>
+        <li><strong>Eliminar</strong> seus dados: faca login e use "Excluir minha conta" na pagina <a href="{{ url_for('conta') }}">Minha conta</a>. Isso tambem cancela seus horarios futuros.</li>
+        <li><strong>Revogar o consentimento</strong>: excluir a conta revoga o consentimento para qualquer finalidade ativa.</li>
+    </ul>
+    <p>Responderemos a pedidos em até 15 dias.</p>
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block titulo %}Meus agendamentos - {{ BIZ.nome }}{% endblock %}
+{% block corpo %}
+<div class="container">
+    <h2><i class="fas fa-calendar-check"></i> Meus agendamentos</h2>
+    <p class="miudo centro">Horários futuros primeiro. Atendemos {{ dias_abertos }}.</p>
+
+    {% if agendamentos %}
+        <div class="lista-cards">
+        {% for a in agendamentos %}
+            <article class="card-agenda {% if a.confirmado %}ok{% endif %} {% if a.data < hoje_iso %}passado{% endif %}">
+                <div>
+                    <p class="card-data">{{ a.data }} as {{ a.horario }}</p>
+                    <p class="card-detalhe"><i class="fas fa-scissors"></i> {{ a.servico }}
+                        &middot; {{ a.preco_centavos|moeda }}
+                        &middot; {{ a.duracao_min }} min</p>
+                    <p class="miudo">
+                        {% if a.confirmado %}<span class="selo selo-ok"><i class="fas fa-check"></i> Confirmado</span>
+                        {% else %}<span class="selo selo-pendente"><i class="fas fa-clock"></i> Aguardando confirmação</span>{% endif %}
+                        {% if a.data < hoje_iso %}<span class="selo">concluido</span>{% endif %}
+                    </p>
+                </div>
+                <div class="card-acoes">
+                    {% if not a.confirmado and a.data >= hoje_iso %}
+                        <form method="post" action="{{ url_for('confirmar_presenca', agenda_id=a.id) }}">
+                            <input type="hidden" name="csrf_token" value="{{ token_csrf() }}">
+                            <button type="submit" class="btn btn-primario"><i class="fas fa-check-circle"></i> Confirmar presença</button>
+                        </form>
+                    {% endif %}
+                    {% if a.data >= hoje_iso %}
+                        <form method="post" action="{{ url_for('cancelar', agenda_id=a.id) }}"
+                              onsubmit="return confirm('Cancelar este agendamento?');">
+                            <input type="hidden" name="csrf_token" value="{{ token_csrf() }}">
+                            <button type="submit" class="btn btn-perigo"><i class="fas fa-times"></i> Cancelar</button>
+                        </form>
+                    {% endif %}
+                </div>
+            </article>
+        {% endfor %}
+        </div>
+    {% else %}
+        <p class="vazio">Você ainda não tem agendamentos.</p>
+        <p class="centro"><a href="{{ url_for('agendar') }}" class="btn btn-primario">Agendar meu horário</a></p>
+    {% endif %}
+</div>
+{% endblock %}

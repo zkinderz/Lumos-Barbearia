@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block titulo %}{{ BIZ.nome }} - Estilo e tradição para o seu visual{% endblock %}
+{% block corpo %}
+<section class="hero">
+    <h2>Estilo e tradição para o seu visual</h2>
+    <p>Garanta seu horario com praticidade e rapidez, sem precisar ligar.</p>
+    <a href="{{ url_for('agendar') }}" class="btn btn-primario"><i class="fas fa-calendar-check"></i> Agendar agora</a>
+</section>
+
+<section class="container">
+    <h3>Nossos serviços</h3>
+    <div class="servicos">
+        {% for s in servicos %}
+            <div class="card-servico">
+                <i class="fas fa-scissors"></i>
+                <h4>{{ s.nome }}</h4>
+                <p>{{ s.descricao }}</p>
+                <p class="preco">{{ s.preco_centavos|moeda }} <span>({{ s.duracao_min }} min)</span></p>
+            </div>
+        {% endfor %}
+    </div>
+    <p class="chamada"><a href="{{ url_for('agendar') }}" class="btn btn-primario">Ver horários disponíveis</a></p>
+</section>
+{% endblock %}
