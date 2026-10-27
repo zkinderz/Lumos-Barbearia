@@ -1,4 +1,0 @@
-# UTF-8 (o arquivo antigo estava salvo em UTF-16 e travava alguns instaladores).
-Flask>=3.1,<4
-Werkzeug>=3.1,<4
-gunicorn>=23.0,<24  # necessario so no deploy (Procfile); local roda com flask run
