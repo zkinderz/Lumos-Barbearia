@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block titulo %}Minha conta - {{ BIZ.nome }}{% endblock %}
+{% block corpo %}
+<div class="container container-narrow">
+    <h2>Minha conta e meus dados</h2>
+    <table class="dados-pessoais">
+        <tr><th>Nome</th><td>{{ usuario.nome }}</td></tr>
+        <tr><th>E-mail</th><td>{{ usuario.email }}</td></tr>
+        <tr><th>Telefone</th><td>{{ usuario.telefone }}</td></tr>
+        <tr><th>Consentimento LGPD</th>
+            <td>{% if usuario.aceite_lgpd_versao %}versao {{ usuario.aceite_lgpd_versao }}, em {{ usuario.data_aceite_lgpd }}{% else %}pendente{% endif %}</td></tr>
+    </table>
+
+    <h3>Seus dados nas mãos da barbearia</h3>
+    <p class="miudo">Voce pode baixar uma copia de tudo o que guardamos (portabilidade, art. 18, V) ou apagar sua conta de vez (direito a eliminacao, art. 18, IV).</p>
+    <p class="acoes-bloco"><a href="{{ url_for('exportar_conta') }}" class="btn btn-secundario">Exportar meus dados</a></p>
+
+    {% if not usuario.is_admin %}
+    <form method="post" action="{{ url_for('excluir_conta') }}" class="zona-perigo"
+          onsubmit="return confirm('Excluir sua conta apaga seus dados e cancela seus agendamentos futuros. Confirma?');">
+        <input type="hidden" name="csrf_token" value="{{ token_csrf() }}">
+        <h3>Excluir minha conta</h3>
+        <p class="miudo">Confirme sua senha para apagar nome, e-mail e telefone do nosso banco. Agendamentos futuros serão cancelados.</p>
+        <div class="campo campo-inline">
+            <input type="password" name="senha" placeholder="Sua senha atual" autocomplete="current-password" required>
+            <button type="submit" class="btn btn-perigo">Excluir conta</button>
+        </div>
+    </form>
+    {% endif %}
+
+    <p class="centro"><a href="{{ url_for('meus_agendamentos') }}">Ver meus agendamentos</a></p>
+</div>
+{% endblock %}

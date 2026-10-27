@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block titulo %}Painel do barbeiro - {{ BIZ.nome }}{% endblock %}
+{% block corpo %}
+<div class="container">
+    <h2><i class="fas fa-user-shield"></i> Agenda {{ data_selecionada or 'geral' }}</h2>
+    <p class="miudo centro">{{ total_proximos }} agendamento(s) de hoje em diante.</p>
+
+    <form method="get" action="{{ url_for('admin') }}" class="barra-filtro">
+        <label for="data">Filtrar por data</label>
+        <input type="date" id="data" name="data" value="{{ data_selecionada }}">
+        <button type="submit" class="btn btn-secundario">Filtrar</button>
+        <a href="{{ url_for('admin') }}" class="btn btn-link">Ver tudo</a>
+    </form>
+
+    {% if agendamentos %}
+        <table id="agenda">
+            <thead>
+                <tr><th>Cliente</th><th>Telefone</th><th>Serviço</th><th>Data</th><th>Horário</th><th>Status</th><th>Ações</th></tr>
+            </thead>
+            <tbody>
+            {% for a in agendamentos %}
+                <tr>
+                    <td data-rotulo="Cliente">{{ a.cliente }}</td>
+                    <td data-rotulo="Telefone">{{ a.telefone or '-' }}</td>
+                    <td data-rotulo="Serviço"><span class="selo selo-servico">{{ a.servico }}</span></td>
+                    <td data-rotulo="Data">{{ a.data }}</td>
+                    <td data-rotulo="Horário">{{ a.horario }}</td>
+                    <td data-rotulo="Status">
+                        {% if a.confirmado %}<span class="selo selo-ok"><i class="fas fa-check-circle"></i> Confirmado</span>
+                        {% else %}<span class="selo selo-pendente"><i class="fas fa-clock"></i> Pendente</span>{% endif %}
+                    </td>
+                    <td class="acoes" data-rotulo="Ações">
+                        {% if not a.confirmado %}
+                            <form method="post" action="{{ url_for('admin_confirmar', agenda_id=a.id) }}">
+                                <input type="hidden" name="csrf_token" value="{{ token_csrf() }}">
+                                <button type="submit" class="btn-mini">Confirmar</button>
+                            </form>
+                        {% endif %}
+                        <form method="post" action="{{ url_for('cancelar', agenda_id=a.id) }}"
+                              onsubmit="return confirm('Cancelar este agendamento?');">
+                            <input type="hidden" name="csrf_token" value="{{ token_csrf() }}">
+                            <button type="submit" class="btn-mini btn-mini-perigo">Cancelar</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="vazio">Nenhum agendamento encontrado.</p>
+    {% endif %}
+</div>
+{% endblock %}
