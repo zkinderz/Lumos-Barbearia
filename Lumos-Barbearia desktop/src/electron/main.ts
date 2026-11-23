@@ -10,7 +10,7 @@ import type { Snapshot } from '../shared/types'
 /** O app funciona 100% sem Supabase (arquivo local). Ao apontar para o Supabase,
  *  a mesma interface passa a ir no Postgres dele. Chave nunca vai ao renderer. */
 
-const EM_DEV = !app.isPackaged
+const EM_DEV = !app.isPackaged && process.env.npm_lifecycle_event === 'dev'
 const ARQUIVO_CONFIG = () => path.join(app.getPath('userData'), 'conexao.json')
 const ARQUIVO_DADOS = () => path.join(app.getPath('userData'), 'lumos-dados.json')
 
